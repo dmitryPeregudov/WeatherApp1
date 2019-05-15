@@ -2,6 +2,7 @@
     <string name="app_name">WeatherApp</string>
     <string name="title_Map">Map</string>
     <string name="title_Weather">Weather</string>
-    <string name="map_api_key">AIzaSyDGSvVKmPNQjQleTL6kaoZUvj1kU7hZqjg</string>
-    <string name="weather_api_key">ed3646a8106140bf8a0be65ba7fdeb7a</string>
+
+
+
 </resources>

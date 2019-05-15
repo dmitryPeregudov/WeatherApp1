@@ -1,4 +1,4 @@
-package com.dethdemonaexemple.weatherapp;
+package com.dethdemonaexemple.weatherapp.DBCLASS;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

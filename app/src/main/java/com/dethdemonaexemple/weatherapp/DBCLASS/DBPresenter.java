@@ -1,16 +1,21 @@
-package com.dethdemonaexemple.weatherapp;
+package com.dethdemonaexemple.weatherapp.DBCLASS;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import android.widget.Toast;
+
+import com.dethdemonaexemple.weatherapp.RESTAPICLASS.Cordinates;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 public class DBPresenter {
     Context context;
-    String TAG="MyLog";
     String dbPath,nameDB;
 
 
@@ -23,7 +28,7 @@ public class DBPresenter {
     }
 
 
-    Cordinates getCoordinates() throws InterruptedException {
+    public Cordinates getCoordinates() throws InterruptedException {
 
         SQLiteDatabase database;
         Cursor cursor;
@@ -61,7 +66,7 @@ public class DBPresenter {
     }
 
 
-    boolean setCoordinates(double latitude,double longitude,String city){
+  public   boolean setCoordinates(double latitude,double longitude,String city){
           DBHelper dbHelper;
         ContentValues contentValues;
         SQLiteDatabase database;
@@ -113,7 +118,7 @@ public class DBPresenter {
 
 
 
-    boolean checkDBCoordinates(){
+    public  boolean checkDBCoordinates(){
 
         DBHelper dbHelper;
         SQLiteDatabase database;
@@ -141,16 +146,88 @@ public class DBPresenter {
         return false;
     }
 
-    String[] getDBWeather(){
+    public  List<String> getDBWeather()throws NullPointerException{
 
-        //TODO
-        return new String[5];
+        SQLiteDatabase database;
+        Cursor cursor;
+        DBHelper dbHelper;
+        List<String> data=new ArrayList<>();
+
+
+        database=SQLiteDatabase.openOrCreateDatabase(dbPath,null);
+        int version=database.getVersion();
+        database.close();
+
+        dbHelper=new DBHelper(context,nameDB,version,null);
+
+        try {
+            database=dbHelper.getWritableDatabase();
+        }catch (SQLException e){database=dbHelper.getReadableDatabase();}
+        cursor=database.query("weather",null,null,null,null,null,null);
+        if (!cursor.moveToFirst()) {
+            return null;
+            }
+        else {
+        cursor.moveToLast();
+            data.add(cursor.getString(cursor.getColumnIndex("_request")));
+
+
+        while (cursor.moveToPrevious()){
+            data.add(cursor.getString(cursor.getColumnIndex("_request")));
+
+        }
+        database.close();cursor.close();dbHelper.close();
+        }
+
+        return data;
     }
 
 
 
-   void setDBWeather(String Data,String Request){
-        //TODO
+    public  void setDBWeather(String Data,String city,String time) {
+        SQLiteDatabase database;
+        ContentValues contentValues;
+        DBHelper dbHelper;
+        Cursor cursor;
+
+        database = SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+        int version = database.getVersion();
+        database.close();
+
+        dbHelper = new DBHelper(context, nameDB, version, null);
+
+        try {
+            database = dbHelper.getWritableDatabase();
+        } catch (SQLException e) {
+            database = dbHelper.getReadableDatabase();
+        }
+        cursor = database.query("weather", null, null, null, null, null, null);
+        if (cursor.moveToLast()) {
+            if (cursor.getString(cursor.getColumnIndex("_request")).equals(Data)) {
+                Toast.makeText(context, "Server hasn't a new weather data", Toast.LENGTH_LONG).show();
+            } else {
+
+                contentValues = new ContentValues();
+                contentValues.put("_time", time);
+                contentValues.put("_request", Data);
+                contentValues.put("_city", city);
+
+                database.insert("weather", null, contentValues);
+            }
+        } else {
+
+            contentValues = new ContentValues();
+
+            contentValues.put("_time", time);
+            contentValues.put("_request", Data);
+            contentValues.put("_city", city);
+
+            database.insert("weather", null, contentValues);
+
+        }
+        database.close();
+        dbHelper.close();
+        cursor.close();
 
    }
 
@@ -167,7 +244,7 @@ public class DBPresenter {
         return check!=null;
    }
 
-   void createDB(){
+    public void createDB(){
         String SQLRequest;
        DBHelper dbHelper;
        SQLiteDatabase database;
