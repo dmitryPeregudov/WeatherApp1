@@ -41,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         Presenter a=new Presenter(this);
          try{
-             Cordinates cordinates= a.getСoordinates();
+             Cordinates cordinates= a.getCoordinates();
         LatLng latLng=new LatLng(cordinates.latitude,cordinates.longitude);
         mMap.addMarker(new MarkerOptions().position(latLng).title("YOUR CITY"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

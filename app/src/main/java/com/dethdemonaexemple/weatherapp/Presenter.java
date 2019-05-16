@@ -11,8 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
-import android.util.Log;
-
 import android.widget.Toast;
 
 import com.dethdemonaexemple.weatherapp.DBCLASS.DBPresenter;
@@ -50,7 +48,7 @@ Context context;
 
 
 
-    Cordinates getСoordinates() throws InterruptedException {
+    Cordinates getCoordinates() throws InterruptedException {
 
 
 
@@ -150,7 +148,7 @@ return fields;
   void getRestWeather(){
       final String city;
       try {
-          Cordinates cord=getСoordinates();
+          Cordinates cord= getCoordinates();
            city=cord.city;
       } catch (InterruptedException e) {
          e.printStackTrace();return;
